@@ -7,15 +7,42 @@ this is very much a work in progress. this repo is intended for my persinal use 
 from gtts import gTTS
 from io import BytesIO
 from PyPDF2 import PdfReader
+import tkinter as tk
+from tkinter.filedialog import askopenfilename
 
-PDF = PdfReader("audit.pdf", False)
-page = PDF.pages[0]
-text = page.extract_text()
 
-test = gTTS(text, lang='en', tld='com') 
+def OpenFile():
+    global state
+    global FilePath
+    FilePath = askopenfilename()
+    newWindow= tk.Toplevel(root)
+    newLabel = tk.Label(newWindow, text='its working')
+    newLabel.pack()
+    windowSetup()
 
-mp3_fp = BytesIO()
-test.write_to_fp(mp3_fp)
-test.save('hello.mp3')
+def windowSetup():
+    global FilePath
+    PDF = PdfReader(FilePath, False)
+    Doc_Length = len(PDF.pages)
+    page = PDF.pages[Doc_Length - 1]
+    text = page.extract_text()
+    test = gTTS(text, lang='en', tld='com')
+    print(text)
 
-print(text)
+
+
+# PDF = ''
+FilePath = None
+
+root = tk.Tk()
+
+
+open_button = tk.Button(root, text=f'Open File', command=OpenFile)
+open_button.pack()
+
+
+    # mp3_fp = BytesIO()
+    # test.write_to_fp(mp3_fp)
+    # test.save('hello.mp3')
+root.mainloop()
+# print(text)
