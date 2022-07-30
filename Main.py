@@ -11,6 +11,14 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 
 
+def pageUP():
+    global dropVar
+    test = dropVar.get() + 1
+    print('test is equil to ' + str(test))
+    dropVar.set(test)
+    rebuildFrame()
+
+
 def makeList():
     global pageVar
     size = pageVar.get()
@@ -24,7 +32,7 @@ def makeList():
 
 def drawFrame(*args):
     global FilePath, Frame, pageVar, dropVar
-    print('draw frame is running')
+    # print('draw frame is running')
     PDF = PdfReader(FilePath, False)
     Doc_Length = len(PDF.pages)
     pageVar.set(Doc_Length)
@@ -34,61 +42,32 @@ def drawFrame(*args):
     dropDownList = makeList()
     pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=drawFrame)
     displayLabel = tk.Label(Frame, text=text)
-    displayLabel.grid(row=0, column=0)
-    pageDropdown.grid(row=1, column=0)
+    displayLabel.grid(row=1, column=0)
+    pageDropdown.grid(row=0, column=0)
+    nextPageButton = tk.Button(Frame, text=">", command=pageUP)
+    nextPageButton.grid(row=0, column=1)
+    lastPageButton = tk.Button(Frame, text=">")
+    lastPageButton.grid(row=0, column=1)
     print(text)
 
 
-def rebuildFrame(self):
-    global Frame, dropVar
+def rebuildFrame():
+    global Frame, dropVar, open_button
     for widget in Frame.winfo_children():
         widget.destroy()
-
-    print(dropVar.get())
-
-
-#clear intro stuff off the window to make room for the main window
-def destroyIntro():
-    global open_button
     open_button.destroy()
+    drawFrame()
+
+    # print(dropVar.get())
 
 
 def openFile():
-    global state
     global FilePath
-    global Frame
-    FilePath = askopenfilename()
-    # newWindow= tk.Toplevel(root)
-    # newLabel = tk.Label(newWindow, text='its working')
-    # newLabel.pack()
-    # windowSetup(Frame)
-    drawFrame()
-
-def windowSetup(frame):
-    global FilePath, pageVar, dropVar#, pageDropdown
-    destroyIntro()
-
-
-    # PDF = PdfReader(FilePath, False)
-    # Doc_Length = len(PDF.pages)
-    # pageVar.set(Doc_Length)
-    # page = PDF.pages[0]
-    # print('page is ' + str(Doc_Length))
-    # pageVar.set(8)
-    # text = page.extract_text()
-    # test = gTTS(text, lang='en', tld='com')
-    # main window Tkinter
-    # dropDownList = makeList()
-    # pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=rebuildFrame)
-    # displayLabel = tk.Label(frame, text=text)
-    # displayLabel.grid(row=0, column=0)
-    # pageDropdown.grid(row=1, column=0)
-    print('attempting to run drawFrame')
-    drawFrame()
+    FilePath = askopenfilename(filetypes= [("PDF files","*.pdf"), ("PDF files","*.PDF")])
+    rebuildFrame()
 
 
 
-# PDF = ''
 FilePath = None
 
 root = tk.Tk()
@@ -106,4 +85,3 @@ dropVar = tk.IntVar()
 # test.write_to_fp(mp3_fp)
 # test.save('hello.mp3')
 root.mainloop()
-# print(text)
