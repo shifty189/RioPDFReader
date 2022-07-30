@@ -11,9 +11,20 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename
 
 
+def lastPage():
+    global dropVar, pageVar
+    print(pageVar.get())
+    dropVar.set(pageVar.get() - 1)
+    rebuildFrame()
+
+
+
 def pageUP():
-    global dropVar
-    test = dropVar.get() + 1
+    global dropVar, pageVar
+    if dropVar.get() >= pageVar.get() - 1:
+        test = dropVar.get()
+    else:
+        test = dropVar.get() + 1
     print('test is equil to ' + str(test))
     dropVar.set(test)
     rebuildFrame()
@@ -46,7 +57,7 @@ def drawFrame(*args):
     pageDropdown.grid(row=0, column=0)
     nextPageButton = tk.Button(Frame, text=">", command=pageUP)
     nextPageButton.grid(row=0, column=1)
-    lastPageButton = tk.Button(Frame, text=">>")
+    lastPageButton = tk.Button(Frame, text=">>", command=lastPage)
     lastPageButton.grid(row=0, column=2)
     print(text)
 
