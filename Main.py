@@ -87,7 +87,6 @@ def makeList():
 
 def drawFrame(*args):
     global FilePath, Frame, pageVar, dropVar, readButton
-    # print('draw frame is running')
     PDF = PdfReader(FilePath, False)
     Doc_Length = len(PDF.pages)
     pageVar.set(Doc_Length)
@@ -122,8 +121,6 @@ def rebuildFrame(*args):
     open_button.destroy()
     drawFrame()
 
-    # print(dropVar.get())
-
 
 def openFile():
     global FilePath
@@ -145,9 +142,5 @@ open_button.grid(row=0, column=0)
 pageVar = tk.IntVar()
 dropVar = tk.IntVar()
 
-
-# mp3_fp = BytesIO()
-# test.write_to_fp(mp3_fp)
-# test.save('hello.mp3')
 root.mainloop()
 os.remove("test.mp3")
