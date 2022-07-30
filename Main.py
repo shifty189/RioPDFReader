@@ -15,9 +15,36 @@ def makeList():
     global pageVar
     size = pageVar.get()
     temp = []
-    for i, x in enumerate(size):
+    i = 0
+    while size >= 0:
         temp.append(i)
+        i += 1
+        size -= 1
     return temp
+
+def drawFrame(*args):
+    global FilePath, Frame, pageVar, dropVar
+    print('draw frame is running')
+    PDF = PdfReader(FilePath, False)
+    Doc_Length = len(PDF.pages)
+    pageVar.set(Doc_Length)
+    page = PDF.pages[dropVar.get()]
+    text = page.extract_text()
+
+    dropDownList = makeList()
+    pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=drawFrame)
+    displayLabel = tk.Label(Frame, text=text)
+    displayLabel.grid(row=0, column=0)
+    pageDropdown.grid(row=1, column=0)
+    print(text)
+
+
+def rebuildFrame(self):
+    global Frame, dropVar
+    for widget in Frame.winfo_children():
+        widget.destroy()
+
+    print(dropVar.get())
 
 
 #clear intro stuff off the window to make room for the main window
@@ -34,31 +61,30 @@ def openFile():
     # newWindow= tk.Toplevel(root)
     # newLabel = tk.Label(newWindow, text='its working')
     # newLabel.pack()
-    windowSetup(Frame)
+    # windowSetup(Frame)
+    drawFrame()
 
 def windowSetup(frame):
-    global FilePath#, pageVar, pageDropdown
+    global FilePath, pageVar, dropVar#, pageDropdown
     destroyIntro()
-    pageVar = tk.IntVar()
-    # pageVar.set(1)
-    dropVar = tk.IntVar()
-    # dropVar.set(1)
-    PDF = PdfReader(FilePath, False)
-    Doc_Length = len(PDF.pages)
-    pageVar.set(Doc_Length)
-    page = PDF.pages[0]
-    print('page is ' + str(Doc_Length))
+
+
+    # PDF = PdfReader(FilePath, False)
+    # Doc_Length = len(PDF.pages)
+    # pageVar.set(Doc_Length)
+    # page = PDF.pages[0]
+    # print('page is ' + str(Doc_Length))
     # pageVar.set(8)
-    text = page.extract_text()
+    # text = page.extract_text()
     # test = gTTS(text, lang='en', tld='com')
-    # main window Tkinter objects
-    pageDropdown = tk.OptionMenu(Frame, dropVar, pageVar, command=makeList)
-    displayLabel = tk.Label(frame, text=text)
-    displayLabel.grid(row=0, column=0)
-    pageDropdown.grid(row=1, column=0)
-
-    print(text)
-
+    # main window Tkinter
+    # dropDownList = makeList()
+    # pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=rebuildFrame)
+    # displayLabel = tk.Label(frame, text=text)
+    # displayLabel.grid(row=0, column=0)
+    # pageDropdown.grid(row=1, column=0)
+    print('attempting to run drawFrame')
+    drawFrame()
 
 
 
@@ -72,6 +98,8 @@ Frame.pack()
 #start up Tkinter objects
 open_button = tk.Button(Frame, text=f'Open File', command=openFile)
 open_button.grid(row=0, column=0)
+pageVar = tk.IntVar()
+dropVar = tk.IntVar()
 
 
 # mp3_fp = BytesIO()
