@@ -46,8 +46,8 @@ def drawFrame(*args):
     pageDropdown.grid(row=0, column=0)
     nextPageButton = tk.Button(Frame, text=">", command=pageUP)
     nextPageButton.grid(row=0, column=1)
-    lastPageButton = tk.Button(Frame, text=">")
-    lastPageButton.grid(row=0, column=1)
+    lastPageButton = tk.Button(Frame, text=">>")
+    lastPageButton.grid(row=0, column=2)
     print(text)
 
 
