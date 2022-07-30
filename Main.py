@@ -4,22 +4,39 @@ feature is to produce an MP3 file and or read the contencts. This was orginally 
 co-worker of mine this is very much a work in progress. this repo is intended for my persinal use at the moment
 """
 
+import os
 from gtts import gTTS
 from io import BytesIO
 from PyPDF2 import PdfReader
 from playsound import playsound
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+from time import sleep
 
 
 def readPage(text):
     print(text)
-    tts = gTTS(text=text)
-    tts.save('test.mp3')
-    # mp3_fp = BytesIO()
-    # tts.write_to_fp(mp3_fp)
-    playsound('test.mp3')
-
+    splitText = text.splitlines()
+    print(len(splitText))
+    for line in splitText:
+        # print(line)
+        try:
+            tts = gTTS(text=line)
+            good = True
+        except AssertionError:
+            good = False
+        if good:
+            try:
+                tts.save('test.mp3')
+            except AssertionError:
+                good = False
+            if good:
+                try:
+                    playsound('test.mp3')
+                except:
+                    pass
+        else:
+            pass
 
 def firstPage():
     global dropVar, pageVar
@@ -86,7 +103,7 @@ def drawFrame(*args):
     firstPageButton.grid(row=1, column=0)
     prevPageButton = tk.Button(Frame, text="<", command=pageDOWN)
     prevPageButton.grid(row=1, column=1)
-    pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=drawFrame)
+    pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=rebuildFrame)
     pageDropdown.grid(row=1, column=2)
     nextPageButton = tk.Button(Frame, text=">", command=pageUP)
     nextPageButton.grid(row=1, column=3)
@@ -98,7 +115,7 @@ def drawFrame(*args):
     print(text)
 
 
-def rebuildFrame():
+def rebuildFrame(*args):
     global Frame, dropVar, open_button
     for widget in Frame.winfo_children():
         widget.destroy()
@@ -133,3 +150,4 @@ dropVar = tk.IntVar()
 # test.write_to_fp(mp3_fp)
 # test.save('hello.mp3')
 root.mainloop()
+os.remove("test.mp3")
