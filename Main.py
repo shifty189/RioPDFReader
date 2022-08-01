@@ -52,7 +52,6 @@ def lastPage():
     rebuildFrame()
 
 
-
 def pageUP():
     global dropVar, pageVar
     if dropVar.get() >= pageVar.get() - 1:
@@ -85,8 +84,15 @@ def makeList():
         size -= 1
     return temp
 
+
 def drawFrame(*args):
     global FilePath, Frame, pageVar, dropVar, readButton
+
+    buttonFrame = tk.Frame(Frame)
+    textFrame = tk.Frame(Frame)
+    buttonFrame.grid(row=0, column=0)
+    textFrame.grid(row=1, column=0)
+
     PDF = PdfReader(FilePath, False)
     Doc_Length = len(PDF.pages)
     pageVar.set(Doc_Length)
@@ -95,21 +101,21 @@ def drawFrame(*args):
 
     dropDownList = makeList()
 
-    readButton = tk.Button(Frame, text="Read Page", command=lambda: readPage(text))
+    readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: readPage(text))
     readButton.grid(row=0, column=2)
 
-    firstPageButton = tk.Button(Frame, text="<<", command=firstPage)
+    firstPageButton = tk.Button(buttonFrame, text="<<", command=firstPage)
     firstPageButton.grid(row=1, column=0)
-    prevPageButton = tk.Button(Frame, text="<", command=pageDOWN)
+    prevPageButton = tk.Button(buttonFrame, text="<", command=pageDOWN)
     prevPageButton.grid(row=1, column=1)
-    pageDropdown = tk.OptionMenu(Frame, dropVar, *dropDownList, command=rebuildFrame)
+    pageDropdown = tk.OptionMenu(buttonFrame, dropVar, *dropDownList, command=rebuildFrame)
     pageDropdown.grid(row=1, column=2)
-    nextPageButton = tk.Button(Frame, text=">", command=pageUP)
+    nextPageButton = tk.Button(buttonFrame, text=">", command=pageUP)
     nextPageButton.grid(row=1, column=3)
-    lastPageButton = tk.Button(Frame, text=">>", command=lastPage)
+    lastPageButton = tk.Button(buttonFrame, text=">>", command=lastPage)
     lastPageButton.grid(row=1, column=4)
 
-    displayLabel = tk.Label(Frame, text=text)
+    displayLabel = tk.Label(textFrame, text=text)
     displayLabel.grid(row=2, column=0)
     print(text)
 
@@ -126,7 +132,6 @@ def openFile():
     global FilePath
     FilePath = askopenfilename(filetypes= [("PDF files","*.pdf"), ("PDF files","*.PDF")])
     rebuildFrame()
-
 
 
 FilePath = None
