@@ -10,6 +10,7 @@ from io import BytesIO
 from PyPDF2 import PdfReader
 from playsound import playsound
 import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename
 from time import sleep
 
@@ -115,8 +116,9 @@ def drawFrame(*args):
     lastPageButton = tk.Button(buttonFrame, text=">>", command=lastPage)
     lastPageButton.grid(row=1, column=4)
 
-    displayLabel = tk.Label(textFrame, text=text)
-    displayLabel.grid(row=2, column=0)
+    displayTextBox = ScrolledText(textFrame, width=75, height=40, wrap=tk.WORD)
+    displayTextBox.insert(tk.INSERT, text)
+    displayTextBox.grid(row=2, column=0)
     print(text)
 
 
