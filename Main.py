@@ -118,6 +118,7 @@ def drawFrame(*args):
 
     displayTextBox = ScrolledText(textFrame, width=75, height=40, wrap=tk.WORD)
     displayTextBox.insert(tk.INSERT, text)
+    displayTextBox.configure(state="disabled")
     displayTextBox.grid(row=2, column=0)
     print(text)
 
