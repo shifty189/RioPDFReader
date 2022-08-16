@@ -12,32 +12,45 @@ from playsound import playsound
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename
-from time import sleep
+import threading
+
+def first_thread(text, root):
+    t1=threading.Thread(target=lambda: readPage(text, root))
+    t1.start()
 
 
-def readPage(text):
+def checkGo():
+    global GO
+    GO = False
+    print('stop pressed')
+
+
+def readPage(text, root):
+    global GO
+    GO = True
     print(text)
     splitText = text.splitlines()
     print(len(splitText))
     for line in splitText:
         # print(line)
-        try:
-            tts = gTTS(text=line)
-            good = True
-        except AssertionError:
-            good = False
-        if good:
+        if GO:
             try:
-                tts.save('test.mp3')
+                tts = gTTS(text=line)
+                good = True
             except AssertionError:
                 good = False
             if good:
                 try:
-                    playsound('test.mp3')
-                except:
-                    pass
-        else:
-            pass
+                    tts.save('test.mp3')
+                except AssertionError:
+                    good = False
+                if good:
+                    try:
+                        playsound('test.mp3')
+                    except:
+                        pass
+            else:
+                pass
 
 def firstPage():
     global dropVar, pageVar
@@ -102,8 +115,10 @@ def drawFrame(*args):
 
     dropDownList = makeList()
 
-    readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: readPage(text))
+    readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: first_thread(text, root))
     readButton.grid(row=0, column=2)
+    stopButton = tk.Button(buttonFrame, text="Stop Reading", command=checkGo)
+    stopButton.grid(row=0, column=3)
 
     firstPageButton = tk.Button(buttonFrame, text="<<", command=firstPage)
     firstPageButton.grid(row=1, column=0)
@@ -138,6 +153,7 @@ def openFile():
 
 
 FilePath = None
+GO = True
 
 root = tk.Tk()
 
