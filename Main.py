@@ -125,6 +125,7 @@ def drawFrame(*args):
 
     dropDownList = makeList()
 
+
     readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: first_thread(text, root))
     readButton.grid(row=0, column=2)
     stopButton = tk.Button(buttonFrame, text="Stop Reading", command=checkGo)
