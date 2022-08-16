@@ -14,6 +14,16 @@ from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename
 import threading
 
+
+def changeVoice(x):
+    global voice
+    voice = x
+
+
+def endProgram():
+    quit()
+
+
 def first_thread(text, root):
     t1=threading.Thread(target=lambda: readPage(text, root))
     t1.start()
@@ -35,7 +45,7 @@ def readPage(text, root):
         # print(line)
         if GO:
             try:
-                tts = gTTS(text=line)
+                tts = gTTS(text=line, lang='en', tld=voice)
                 good = True
             except AssertionError:
                 good = False
@@ -154,8 +164,22 @@ def openFile():
 
 FilePath = None
 GO = True
+voice = 'com'
 
 root = tk.Tk()
+menuBar = tk.Menu(root)
+fileMenuBar = tk.Menu(menuBar)
+fileMenuBar.add_command(label='Exit', command=endProgram)
+fileMenuBar.add_command(label="Open", command=openFile)
+menuBar.add_cascade(label='File', menu=fileMenuBar)
+
+voiceMenuBar = tk.Menu(menuBar)
+voiceMenuBar.add_command(label='US', command=lambda: changeVoice('com'))
+voiceMenuBar.add_command(label='UK', command=lambda: changeVoice('co.uk'))
+voiceMenuBar.add_command(label='Austrailian', command=lambda: changeVoice('com.au'))
+voiceMenuBar.add_command(label='Canadian', command=lambda: changeVoice('ca'))
+voiceMenuBar.add_command(label='Indian', command=lambda: changeVoice('co.in'))
+menuBar.add_cascade(label='voice', menu=voiceMenuBar)
 
 Frame = tk.Frame()
 Frame.pack()
@@ -166,5 +190,6 @@ open_button.grid(row=0, column=0)
 pageVar = tk.IntVar()
 dropVar = tk.IntVar()
 
+root.config(menu=menuBar)
 root.mainloop()
 os.remove("test.mp3")
