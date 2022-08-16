@@ -12,32 +12,55 @@ from playsound import playsound
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename
-from time import sleep
+import threading
 
 
-def readPage(text):
+def changeVoice(x):
+    global voice
+    voice = x
+
+
+def endProgram():
+    quit()
+
+
+def first_thread(text, root):
+    t1=threading.Thread(target=lambda: readPage(text, root))
+    t1.start()
+
+
+def checkGo():
+    global GO
+    GO = False
+    print('stop pressed')
+
+
+def readPage(text, root):
+    global GO
+    GO = True
     print(text)
     splitText = text.splitlines()
     print(len(splitText))
     for line in splitText:
         # print(line)
-        try:
-            tts = gTTS(text=line)
-            good = True
-        except AssertionError:
-            good = False
-        if good:
+        if GO:
             try:
-                tts.save('test.mp3')
+                tts = gTTS(text=line, lang='en', tld=voice)
+                good = True
             except AssertionError:
                 good = False
             if good:
                 try:
-                    playsound('test.mp3')
-                except:
-                    pass
-        else:
-            pass
+                    tts.save('test.mp3')
+                except AssertionError:
+                    good = False
+                if good:
+                    try:
+                        playsound('test.mp3')
+                    except:
+                        pass
+            else:
+                pass
 
 def firstPage():
     global dropVar, pageVar
@@ -102,8 +125,11 @@ def drawFrame(*args):
 
     dropDownList = makeList()
 
-    readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: readPage(text))
+
+    readButton = tk.Button(buttonFrame, text="Read Page", command=lambda: first_thread(text, root))
     readButton.grid(row=0, column=2)
+    stopButton = tk.Button(buttonFrame, text="Stop Reading", command=checkGo)
+    stopButton.grid(row=0, column=3)
 
     firstPageButton = tk.Button(buttonFrame, text="<<", command=firstPage)
     firstPageButton.grid(row=1, column=0)
@@ -138,8 +164,24 @@ def openFile():
 
 
 FilePath = None
+GO = True
+voice = 'com'
 
 root = tk.Tk()
+#create menu bar File starts here
+menuBar = tk.Menu(root)
+fileMenuBar = tk.Menu(menuBar)
+fileMenuBar.add_command(label='Exit', command=endProgram)
+fileMenuBar.add_command(label="Open", command=openFile)
+menuBar.add_cascade(label='File', menu=fileMenuBar)
+#Add voice manu to the menu bar
+voiceMenuBar = tk.Menu(menuBar)
+voiceMenuBar.add_command(label='US', command=lambda: changeVoice('com'))
+voiceMenuBar.add_command(label='UK', command=lambda: changeVoice('co.uk'))
+voiceMenuBar.add_command(label='Australian', command=lambda: changeVoice('com.au'))
+voiceMenuBar.add_command(label='Canadian', command=lambda: changeVoice('ca'))
+voiceMenuBar.add_command(label='Indian', command=lambda: changeVoice('co.in'))
+menuBar.add_cascade(label='voice', menu=voiceMenuBar)
 
 Frame = tk.Frame()
 Frame.pack()
@@ -150,5 +192,6 @@ open_button.grid(row=0, column=0)
 pageVar = tk.IntVar()
 dropVar = tk.IntVar()
 
+root.config(menu=menuBar)
 root.mainloop()
 os.remove("test.mp3")
