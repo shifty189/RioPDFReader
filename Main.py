@@ -167,16 +167,17 @@ GO = True
 voice = 'com'
 
 root = tk.Tk()
+#create menu bar File starts here
 menuBar = tk.Menu(root)
 fileMenuBar = tk.Menu(menuBar)
 fileMenuBar.add_command(label='Exit', command=endProgram)
 fileMenuBar.add_command(label="Open", command=openFile)
 menuBar.add_cascade(label='File', menu=fileMenuBar)
-
+#Add voice manu to the menu bar
 voiceMenuBar = tk.Menu(menuBar)
 voiceMenuBar.add_command(label='US', command=lambda: changeVoice('com'))
 voiceMenuBar.add_command(label='UK', command=lambda: changeVoice('co.uk'))
-voiceMenuBar.add_command(label='Austrailian', command=lambda: changeVoice('com.au'))
+voiceMenuBar.add_command(label='Australian', command=lambda: changeVoice('com.au'))
 voiceMenuBar.add_command(label='Canadian', command=lambda: changeVoice('ca'))
 voiceMenuBar.add_command(label='Indian', command=lambda: changeVoice('co.in'))
 menuBar.add_cascade(label='voice', menu=voiceMenuBar)
